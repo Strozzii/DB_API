@@ -1,11 +1,12 @@
 """This module sets up a PostgreSQL server"""
 
-import logging
 import random
 from datetime import datetime, timedelta
 
 import psycopg2
 from psycopg2 import sql
+
+import credentials as creds
 
 
 def setup(number: int = 100):
@@ -21,7 +22,7 @@ def setup(number: int = 100):
     conn = psycopg2.connect(
         dbname="postgres",
         user="postgres",
-        password="3589",
+        password=creds.POSTGRES_PASSWORD,
         host="localhost",
         port="5432"
     )
