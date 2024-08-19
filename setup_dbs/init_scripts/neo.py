@@ -19,7 +19,7 @@ def setup(number: int = 100):
 
     def create_ausgabe(tx, department_id, expense_date, expense_type, description, amount, currency, updated_at):
         """
-        Sub-function to display a node in neo4j
+        Sub-function to create a node in neo4j
 
         :param tx: Transaction unit
         :param department_id: Reference to the department
