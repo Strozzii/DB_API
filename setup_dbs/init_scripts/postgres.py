@@ -1,5 +1,6 @@
 """This module sets up a PostgreSQL server"""
 
+import logging
 import random
 from datetime import datetime, timedelta
 
@@ -13,6 +14,8 @@ def setup(number: int = 100):
 
     :param number: Number of test data (Default: 100)
     """
+
+    print(f"Starting {__name__} ...")
 
     # Create DB instance
     conn = psycopg2.connect(
@@ -70,3 +73,5 @@ def setup(number: int = 100):
     conn.commit()
     cur.close()
     conn.close()
+
+    print(f"Finished {__name__} !")

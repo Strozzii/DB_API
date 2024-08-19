@@ -13,6 +13,8 @@ def setup(number: int = 100) -> None:
     :param number: Number of test data (Default: 100)
     """
 
+    print(f"Starting {__name__} ...")
+
     # Create DB instance
     client = MongoClient("mongodb://localhost:27017/")
     db = client["mongo"]
@@ -50,3 +52,5 @@ def setup(number: int = 100) -> None:
         })
 
     collection.insert_many(test_data)
+
+    print(f"Finished {__name__} !")

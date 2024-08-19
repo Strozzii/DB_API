@@ -13,6 +13,8 @@ def setup(number: int = 100):
     :param number: Number of test data (Default: 100)
     """
 
+    print(f"Starting {__name__} ...")
+
     # Create DB instance
     uri = "bolt://localhost:7687"
     driver = GraphDatabase.driver(uri, auth=("neo4j", "normale_kartoffeln_auf_die_1"))
@@ -77,3 +79,5 @@ def setup(number: int = 100):
                                       currency, updated_at)
 
     driver.close()
+
+    print(f"Finished {__name__} !")
