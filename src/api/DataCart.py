@@ -88,6 +88,9 @@ class DataCart:
             data = [record["n"] for record in result]
             dataframe = pd.DataFrame([dict(record) for record in data])
 
+            dataframe["expense_date"] = pd.to_datetime(dataframe["expense_date"], errors="coerce")
+            dataframe["expense_date"] = dataframe["expense_date"].dt.strftime("%Y-%m-%d")
+
             return dataframe
 
         except Exception as e:
