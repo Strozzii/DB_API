@@ -3,6 +3,7 @@
 import random
 from datetime import datetime, timedelta
 
+import credentials as creds
 from neo4j import GraphDatabase
 
 
@@ -17,7 +18,7 @@ def setup(number: int = 100):
 
     # Create DB instance
     uri = "bolt://localhost:7687"
-    driver = GraphDatabase.driver(uri, auth=("neo4j", "normale_kartoffeln_auf_die_1"))
+    driver = GraphDatabase.driver(uri, auth=("neo4j", creds.NEO4J_PASSWORD))
 
     def create_ausgabe(tx, department_id, expense_date, expense_type, description, amount, currency, updated_at):
         """
