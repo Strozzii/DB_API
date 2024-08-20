@@ -1,6 +1,4 @@
 """This module is testing the API"""
-import pandas as pd
-
 from src.api.datacart import DataCart
 from src.frontend.applications.plot_interface import PlotInterface
 
@@ -12,11 +10,11 @@ class Main:
         self.plot = PlotInterface()
 
     def run(self) -> None:
-        postgres_df = self.data.get_postgres_data("ausgaben", ['expense_date', 'amount'], limit=3)
-        mongo_df = self.data.get_mongo_data("risks", ['risk_id', 'title', 'risk_score'], limit=3)
+        postgres_df = self.data.get_postgres_data("ausgaben", [], limit=3)
+        mongo_df = self.data.get_mongo_data("risks", [], limit=1)
         neo_df = self.data.get_neo_data("(e)", ['e.name', 'e.id'])
-        print(neo_df)
 
+        print(mongo_df)
 
 if __name__ == "__main__":
     main = Main()

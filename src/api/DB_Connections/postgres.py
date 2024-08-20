@@ -18,9 +18,10 @@ class DataBase:
     def get_data(self, table: str, atts: list, limit: int) -> pd.DataFrame:
 
         if not atts:
-            raise ValueError
+            attrs_str = "*"
+        else:
+            attrs_str = ", ".join(atts)
 
-        attrs_str = ", ".join(atts)
         sql = f"SELECT {attrs_str} FROM {table} LIMIT {limit}"
 
         try:

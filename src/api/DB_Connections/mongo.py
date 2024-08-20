@@ -10,10 +10,9 @@ class DataBase:
 
     def get_data(self, collection: str, atts: list, limit: int) -> pd.DataFrame:
 
-        if not atts:
-            raise ValueError
-
-        projection = {att: 1 for att in atts}
+        projection = {}
+        if atts:
+            projection = {att: 1 for att in atts}
         projection['_id'] = 0
 
         try:
