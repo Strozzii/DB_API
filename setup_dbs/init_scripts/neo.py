@@ -11,6 +11,7 @@ def setup():
     driver = GraphDatabase.driver(uri, auth=(username, password))
 
     with driver.session() as session:
+        session.run("MATCH (n) DETACH DELETE n")
         session.write_transaction(create_test_data)
 
 
