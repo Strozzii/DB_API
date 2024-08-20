@@ -1,84 +1,117 @@
-"""This module sets up a neo4j server"""
-
-import random
-from datetime import datetime, timedelta
-
-import credentials as creds
 from neo4j import GraphDatabase
+import random
+import credentials as creds
 
 
-def setup(number: int = 100):
-    """
-    Clears the existing neo4j database and populates it with test financial data
-
-    :param number: Number of test data (Default: 100)
-    """
-
-    print(f"Starting {__name__} ...")
-
-    # Create DB instance
+def setup():
     uri = "bolt://localhost:7687"
-    driver = GraphDatabase.driver(uri, auth=("neo4j", creds.NEO4J_PASSWORD))
+    username = 'neo4j'
+    password = creds.NEO4J_PASSWORD
 
-    def create_ausgabe(tx, department_id, expense_date, expense_type, description, amount, currency, updated_at):
-        """
-        Sub-function to create a node in neo4j
-
-        :param tx: Transaction unit
-        :param department_id: Reference to the department
-        :param expense_date: Date of expense
-        :param expense_type: Type of expense
-        :param description: Description of the expense (optional, for more details)
-        :param amount: Amount of the expense
-        :param currency: Currency of the expense (Supported are: USD, EUR and GBP)
-        :param updated_at: Timestamp of when the node was last updated
-        """
-
-        tx.run("""
-        CREATE (a:Ausgabe {
-            department_id: $department_id, 
-            expense_date: $expense_date, 
-            expense_type: $expense_type, 
-            description: $description, 
-            amount: $amount, 
-            currency: $currency,
-            updated_at: $updated_at
-        })
-        """,
-               department_id=department_id,
-               expense_date=expense_date,
-               expense_type=expense_type,
-               description=description,
-               amount=amount,
-               currency=currency,
-               updated_at=updated_at)
+    driver = GraphDatabase.driver(uri, auth=(username, password))
 
     with driver.session() as session:
+        session.write_transaction(create_test_data)
 
-        # Clear DB
-        session.run("MATCH ()-[r]->() DELETE r")
-        session.run("MATCH (n) DELETE n")
 
-        # Setup DB
-        expense_types = ["Bürobedarf", "Reisekosten", "Verpflegung", "Unterhalt", "IT-Kosten", "Marketing", "Schulung",
-                         "Consulting", "Sonstiges"]
-        currencies = ["USD", "EUR", "GBP"]
+def create_test_data(tx):
+    projects = [
+        {"id": "p0001", "name": "Pearl", "budget": 10000},
+        {"id": "p0002", "name": "Haven", "budget": 20000},
+        {"id": "p0003", "name": "Lotus", "budget": 30000}
+    ]
 
-        # Test data has timestamp starting from 01.01.2023
-        start_date = datetime(2023, 1, 1)
+    teams = [
+        {"id": "t1", "name": "Team Harbor"},
+        {"id": "t2", "name": "Team Fade"},
+        {"id": "t3", "name": "Team Viper"},
+        {"id": "t4", "name": "Team Gekko"},
+        {"id": "t5", "name": "Team Jett"},
+        {"id": "t6", "name": "Team Deadlock"}
+    ]
 
-        for i in range(number):
-            department_id = random.randint(1, 5)
-            expense_date = (start_date + timedelta(days=i)).isoformat()
-            expense_type = random.choice(expense_types)
-            description = f"Beispielbeschreibung {i + 1}" if random.random() > 0.3 else None
-            amount = round(random.uniform(10, 10000), 2)
-            currency = random.choice(currencies)
-            updated_at = (datetime.fromisoformat(expense_date) + timedelta(days=random.randint(0, 30))).isoformat()
+    employee_names = [
+        "Anna Müller",
+        "Bernd Schmidt",
+        "Clara Meier",
+        "David Braun",
+        "Eva Fischer",
+        "Franziska Hoffmann",
+        "Georg Weber",
+        "Hannah Koch",
+        "Ian Schneider",
+        "Julia Wagner",
+        "Karl Schulz",
+        "Laura Zimmermann",
+        "Markus Lang",
+        "Nina Richter",
+        "Oliver Klein",
+        "Petra Lange",
+        "Quentin Berger",
+        "Rita Peters",
+        "Stefan Müller",
+        "Tina Neumann",
+        "Uwe Schwarz",
+        "Vanessa Koch",
+        "Walter Hartmann",
+        "Xenia Günther",
+        "Yvonne Schneider"
+    ]
 
-            session.write_transaction(create_ausgabe, department_id, expense_date, expense_type, description, amount,
-                                      currency, updated_at)
+    # Erstelle Mitarbeiter
+    employees = [
+        {"id": f"e{i + 1}", "name": name, "Abteilung": f"Dept {i % 3}"}
+        for i, name in enumerate(employee_names)
+    ]
 
-    driver.close()
+    # Knoten für Projekte erstellen
+    for project in projects:
+        tx.run(
+            "CREATE (p:Project {id: $id, name: $name, budget: $budget})",
+            id=project["id"], name=project["name"], budget=project["budget"]
+        )
 
-    print(f"Finished {__name__} !")
+    # Knoten für Teams erstellen
+    for team in teams:
+        tx.run(
+            "CREATE (t:Team {id: $id, name: $name})",
+            id=team["id"], name=team["name"]
+        )
+
+    # Knoten für Mitarbeiter erstellen
+    for employee in employees:
+        tx.run(
+            "CREATE (e:Employee {id: $id, name: $name, Abteilung: $Abteilung})",
+            id=employee["id"], name=employee["name"], Abteilung=employee["Abteilung"]
+        )
+
+    team_employees = {team['id']: [] for team in teams}
+    for employee in employees:
+        team_id = random.choice(teams)['id']
+        team_employees[team_id].append(employee['id'])
+        tx.run(
+            "MATCH (e:Employee {id: $employee_id}), (t:Team {id: $team_id}) "
+            "CREATE (e)-[:GEHOERT_ZU]->(t)",
+            employee_id=employee['id'], team_id=team_id
+        )
+
+    # Kanten für Teams und Projekte erstellen
+    project_teams = {}
+    for project in projects:
+        teams_for_project = random.sample(teams, k=random.randint(1, 2))
+        project_teams[project['id']] = [team['id'] for team in teams_for_project]
+        for team in teams_for_project:
+            tx.run(
+                "MATCH (t:Team {id: $team_id}), (p:Project {id: $project_id}) "
+                "CREATE (t)-[:ARBEITEN_AN]->(p)",
+                team_id=team['id'], project_id=project['id']
+            )
+
+    # Verantwortlichen für jedes Projekt festlegen
+    for project_id, team_ids in project_teams.items():
+        responsible_employee = random.choice(employees)
+        tx.run(
+            "MATCH (e:Employee {id: $employee_id}), (p:Project {id: $project_id}) "
+            "CREATE (e)-[:VERANTWORTLICH_FUER]->(p)",
+            employee_id=responsible_employee['id'], project_id=project_id
+        )

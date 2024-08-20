@@ -16,8 +16,6 @@ def setup(number: int = 100):
     :param number: Number of test data (Default: 100)
     """
 
-    print(f"Starting {__name__} ...")
-
     # Create DB instance
     conn = psycopg2.connect(
         dbname="postgres",
@@ -74,5 +72,3 @@ def setup(number: int = 100):
     conn.commit()
     cur.close()
     conn.close()
-
-    print(f"Finished {__name__} !")

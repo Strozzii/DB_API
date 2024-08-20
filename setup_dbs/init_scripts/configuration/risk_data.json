@@ -1,0 +1,463 @@
+[
+    {
+        "risk_id": "RISK-001",
+        "title": "Cybersecurity Risk",
+        "description": "Potential risk of data breaches due to insecure IT infrastructure.",
+        "category": "IT",
+        "likelihood": 4,
+        "impact": 5,
+        "risk_score": 20,
+        "status": "Open",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-001-01",
+                    "description": "Upgrade firewall and intrusion detection systems.",
+                    "responsible_person": {
+                        "name": "John Doe",
+                        "role": "IT Security Manager",
+                        "email": "john.doe@example.com"
+                    },
+                    "due_date": "2024-12-31",
+                    "status": "Pending"
+                },
+                {
+                    "action_id": "ACTION-RISK-001-02",
+                    "description": "Conduct a security audit.",
+                    "responsible_person": {
+                        "name": "John Doe",
+                        "role": "IT Security Manager",
+                        "email": "john.doe@example.com"
+                    },
+                    "due_date": "2024-11-30",
+                    "status": "In Progress"
+                }
+            ]
+        },
+        "responsible_department": "IT",
+        "reported_by": {
+            "name": "John Doe",
+            "role": "IT Security Manager",
+            "email": "john.doe@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-01-15",
+                "event": "Risk Identified",
+                "details": "Cybersecurity risk identified due to outdated systems."
+            },
+            {
+                "date": "2024-02-01",
+                "event": "Risk Assessed",
+                "details": "Assessment of risk impact and likelihood completed."
+            }
+        ],
+        "created_at": "2024-01-10T10:00:00Z",
+        "updated_at": "2024-08-20T12:00:00Z"
+    },
+    {
+        "risk_id": "RISK-002",
+        "title": "Market Volatility",
+        "description": "Risk arising from unexpected market fluctuations.",
+        "category": "Finance",
+        "likelihood": 3,
+        "impact": 4,
+        "risk_score": 12,
+        "status": "In Progress",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-002-01",
+                    "description": "Diversify investment portfolio.",
+                    "responsible_person": {
+                        "name": "William Brown",
+                        "role": "Finance Director",
+                        "email": "william.brown@example.com"
+                    },
+                    "due_date": "2024-09-30",
+                    "status": "Pending"
+                }
+            ]
+        },
+        "responsible_department": "Finance",
+        "reported_by": {
+            "name": "William Brown",
+            "role": "Finance Director",
+            "email": "william.brown@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-03-05",
+                "event": "Risk Identified",
+                "details": "Market volatility risk identified due to economic downturn."
+            },
+            {
+                "date": "2024-04-20",
+                "event": "Risk Assessed",
+                "details": "Assessment of market impact and mitigation strategies discussed."
+            }
+        ],
+        "created_at": "2024-03-01T09:00:00Z",
+        "updated_at": "2024-08-10T11:00:00Z"
+    },
+    {
+        "risk_id": "RISK-003",
+        "title": "Compliance Breach",
+        "description": "Risk of non-compliance with legal regulations.",
+        "category": "Compliance",
+        "likelihood": 2,
+        "impact": 5,
+        "risk_score": 10,
+        "status": "Open",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-003-01",
+                    "description": "Review and update compliance policies.",
+                    "responsible_person": {
+                        "name": "Emily Davis",
+                        "role": "Compliance Officer",
+                        "email": "emily.davis@example.com"
+                    },
+                    "due_date": "2024-12-15",
+                    "status": "Pending"
+                }
+            ]
+        },
+        "responsible_department": "Compliance",
+        "reported_by": {
+            "name": "Emily Davis",
+            "role": "Compliance Officer",
+            "email": "emily.davis@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-02-10",
+                "event": "Risk Identified",
+                "details": "Potential breach of compliance identified during audit."
+            },
+            {
+                "date": "2024-03-15",
+                "event": "Risk Assessed",
+                "details": "Risk assessment completed with recommendations for policy updates."
+            }
+        ],
+        "created_at": "2024-02-01T08:00:00Z",
+        "updated_at": "2024-08-05T10:00:00Z"
+    },
+    {
+        "risk_id": "RISK-004",
+        "title": "Natural Disaster",
+        "description": "Risk of earthquakes or other natural disasters impacting operations.",
+        "category": "Operations",
+        "likelihood": 1,
+        "impact": 5,
+        "risk_score": 5,
+        "status": "Open",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-004-01",
+                    "description": "Implement disaster recovery plan.",
+                    "responsible_person": {
+                        "name": "Michael Johnson",
+                        "role": "Risk Manager",
+                        "email": "michael.johnson@example.com"
+                    },
+                    "due_date": "2024-10-01",
+                    "status": "Pending"
+                }
+            ]
+        },
+        "responsible_department": "Operations",
+        "reported_by": {
+            "name": "Michael Johnson",
+            "role": "Risk Manager",
+            "email": "michael.johnson@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-03-20",
+                "event": "Risk Identified",
+                "details": "Risk of natural disaster identified based on regional vulnerability."
+            },
+            {
+                "date": "2024-04-10",
+                "event": "Risk Assessed",
+                "details": "Assessment of impact and preparedness measures started."
+            }
+        ],
+        "created_at": "2024-03-15T09:30:00Z",
+        "updated_at": "2024-08-01T10:30:00Z"
+    },
+    {
+        "risk_id": "RISK-005",
+        "title": "Supplier Risk",
+        "description": "Uncertainty in the supply chain due to unreliable suppliers.",
+        "category": "Supply Chain",
+        "likelihood": 4,
+        "impact": 3,
+        "risk_score": 12,
+        "status": "In Progress",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-005-01",
+                    "description": "Diversify supplier base.",
+                    "responsible_person": {
+                        "name": "Jane Smith",
+                        "role": "Supply Chain Manager",
+                        "email": "jane.smith@example.com"
+                    },
+                    "due_date": "2024-09-15",
+                    "status": "In Progress"
+                }
+            ]
+        },
+        "responsible_department": "Supply Chain",
+        "reported_by": {
+            "name": "Jane Smith",
+            "role": "Supply Chain Manager",
+            "email": "jane.smith@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-05-01",
+                "event": "Risk Identified",
+                "details": "Supplier risk identified due to recent supply delays."
+            },
+            {
+                "date": "2024-06-10",
+                "event": "Risk Assessed",
+                "details": "Assessment of impact and mitigation strategies developed."
+            }
+        ],
+        "created_at": "2024-04-15T11:00:00Z",
+        "updated_at": "2024-08-10T12:00:00Z"
+    },
+    {
+        "risk_id": "RISK-006",
+        "title": "Production Downtime",
+        "description": "Risk of production stoppage due to machine failures.",
+        "category": "Operations",
+        "likelihood": 3,
+        "impact": 4,
+        "risk_score": 12,
+        "status": "Open",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-006-01",
+                    "description": "Schedule regular maintenance for machinery.",
+                    "responsible_person": {
+                        "name": "Michael Johnson",
+                        "role": "Risk Manager",
+                        "email": "michael.johnson@example.com"
+                    },
+                    "due_date": "2024-08-15",
+                    "status": "Pending"
+                }
+            ]
+        },
+        "responsible_department": "Operations",
+        "reported_by": {
+            "name": "Michael Johnson",
+            "role": "Risk Manager",
+            "email": "michael.johnson@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-06-01",
+                "event": "Risk Identified",
+                "details": "Risk of production downtime identified due to aging equipment."
+            },
+            {
+                "date": "2024-07-01",
+                "event": "Risk Assessed",
+                "details": "Assessment of downtime impact and mitigation strategies proposed."
+            }
+        ],
+        "created_at": "2024-05-20T09:00:00Z",
+        "updated_at": "2024-08-05T10:00:00Z"
+    },
+    {
+        "risk_id": "RISK-007",
+        "title": "Financial Instability",
+        "description": "Potential risk of insolvency due to financial instability.",
+        "category": "Finance",
+        "likelihood": 5,
+        "impact": 5,
+        "risk_score": 25,
+        "status": "Open",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-007-01",
+                    "description": "Review financial stability and restructure debt.",
+                    "responsible_person": {
+                        "name": "William Brown",
+                        "role": "Finance Director",
+                        "email": "william.brown@example.com"
+                    },
+                    "due_date": "2024-11-01",
+                    "status": "Pending"
+                }
+            ]
+        },
+        "responsible_department": "Finance",
+        "reported_by": {
+            "name": "William Brown",
+            "role": "Finance Director",
+            "email": "william.brown@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-01-20",
+                "event": "Risk Identified",
+                "details": "Risk of financial instability due to poor cash flow."
+            },
+            {
+                "date": "2024-02-15",
+                "event": "Risk Assessed",
+                "details": "Financial impact assessment and restructuring options evaluated."
+            }
+        ],
+        "created_at": "2024-01-10T10:00:00Z",
+        "updated_at": "2024-08-01T11:00:00Z"
+    },
+    {
+        "risk_id": "RISK-008",
+        "title": "Reputation Risk",
+        "description": "Damage to company reputation due to negative publicity.",
+        "category": "HR",
+        "likelihood": 3,
+        "impact": 4,
+        "risk_score": 12,
+        "status": "In Progress",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-008-01",
+                    "description": "Implement a PR crisis management plan.",
+                    "responsible_person": {
+                        "name": "Jane Smith",
+                        "role": "HR Manager",
+                        "email": "jane.smith@example.com"
+                    },
+                    "due_date": "2024-09-30",
+                    "status": "In Progress"
+                }
+            ]
+        },
+        "responsible_department": "HR",
+        "reported_by": {
+            "name": "Jane Smith",
+            "role": "HR Manager",
+            "email": "jane.smith@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-02-20",
+                "event": "Risk Identified",
+                "details": "Risk of reputational damage identified due to recent negative media coverage."
+            },
+            {
+                "date": "2024-03-15",
+                "event": "Risk Assessed",
+                "details": "Assessment of impact on company reputation and action plan developed."
+            }
+        ],
+        "created_at": "2024-02-01T08:30:00Z",
+        "updated_at": "2024-08-15T10:00:00Z"
+    },
+    {
+        "risk_id": "RISK-009",
+        "title": "Technology Failure",
+        "description": "Risk of system outages due to outdated technology.",
+        "category": "IT",
+        "likelihood": 2,
+        "impact": 4,
+        "risk_score": 8,
+        "status": "Open",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-009-01",
+                    "description": "Upgrade IT infrastructure.",
+                    "responsible_person": {
+                        "name": "John Doe",
+                        "role": "IT Security Manager",
+                        "email": "john.doe@example.com"
+                    },
+                    "due_date": "2024-11-01",
+                    "status": "Pending"
+                }
+            ]
+        },
+        "responsible_department": "IT",
+        "reported_by": {
+            "name": "John Doe",
+            "role": "IT Security Manager",
+            "email": "john.doe@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-04-01",
+                "event": "Risk Identified",
+                "details": "Risk of technology failure identified due to outdated systems."
+            },
+            {
+                "date": "2024-05-15",
+                "event": "Risk Assessed",
+                "details": "Assessment of risk and planning for infrastructure upgrade initiated."
+            }
+        ],
+        "created_at": "2024-03-15T09:00:00Z",
+        "updated_at": "2024-08-10T10:00:00Z"
+    },
+    {
+        "risk_id": "RISK-010",
+        "title": "Data Privacy Violation",
+        "description": "Risk of data loss due to improper data handling.",
+        "category": "Compliance",
+        "likelihood": 4,
+        "impact": 5,
+        "risk_score": 20,
+        "status": "In Progress",
+        "mitigation_plan": {
+            "actions": [
+                {
+                    "action_id": "ACTION-RISK-010-01",
+                    "description": "Enhance data encryption and security measures.",
+                    "responsible_person": {
+                        "name": "Emily Davis",
+                        "role": "Compliance Officer",
+                        "email": "emily.davis@example.com"
+                    },
+                    "due_date": "2024-10-01",
+                    "status": "In Progress"
+                }
+            ]
+        },
+        "responsible_department": "Compliance",
+        "reported_by": {
+            "name": "Emily Davis",
+            "role": "Compliance Officer",
+            "email": "emily.davis@example.com"
+        },
+        "history": [
+            {
+                "date": "2024-06-10",
+                "event": "Risk Identified",
+                "details": "Potential data privacy violation identified due to outdated data handling practices."
+            },
+            {
+                "date": "2024-07-15",
+                "event": "Risk Assessed",
+                "details": "Assessment of data privacy risk and planning for enhanced security measures."
+            }
+        ],
+        "created_at": "2024-06-01T08:00:00Z",
+        "updated_at": "2024-08-20T12:00:00Z"
+    }
+]
