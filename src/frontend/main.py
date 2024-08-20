@@ -1,7 +1,7 @@
 """This module is testing the API"""
 import pandas as pd
 
-from src.api.DataCart import DataCart
+from src.api.datacart import DataCart
 from src.frontend.applications.plot_interface import PlotInterface
 
 
@@ -12,16 +12,11 @@ class Main:
         self.plot = PlotInterface()
 
     def run(self) -> None:
-        self.data.fetch_all_data()
-        bulky_dataframe = self.data.load(is_bulk=True)
+        postgres_df = self.data.get_postgres_data("ausgaben", ['expense_date', 'amount'], limit=3)
+        mongo_df = self.data.get_mongo_data("risks", ['risk_id', 'title', 'risk_score'], limit=3)
+        neo_df = self.data.get_neo_data("(e)", ['e.name', 'e.id'])
+        print(neo_df)
 
-        for key, df in bulky_dataframe.items():
-            self.plot.make_bar_graph(df=df[-7:], title=key)
-
-        for df in bulky_dataframe.values():
-            df["expense_date"] = pd.to_datetime(df["expense_date"])
-        df = pd.concat(bulky_dataframe.values()).groupby(["expense_date"], as_index=False)["amount"].sum()
-        self.plot.make_bar_graph(df=df[-7:], title="all")
 
 if __name__ == "__main__":
     main = Main()
