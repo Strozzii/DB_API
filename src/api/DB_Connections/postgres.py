@@ -31,3 +31,12 @@ class DataBase:
             df = pd.DataFrame()
 
         return df
+
+    def get_data_from_query(self, query):
+        try:
+            df = pd.read_sql(query, con=self.conn)
+        except Exception as e:
+            print(e)
+            df = pd.DataFrame()
+
+        return df

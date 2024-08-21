@@ -34,3 +34,15 @@ class DataBase:
             df = pd.DataFrame()
 
         return df
+
+    def get_data_from_query(self, query: str) -> pd.DataFrame:
+
+        try:
+            result = self.conn.run(query)
+            data = [record.data() for record in result]
+            df = pd.DataFrame(data)
+        except Exception as e:
+            print(e)
+            df = pd.DataFrame()
+
+        return df
