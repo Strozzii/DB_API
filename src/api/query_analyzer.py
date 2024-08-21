@@ -1,13 +1,22 @@
+"""Module that analyses database queries."""
+
 from enum import Enum
 
 
 class Syntax(Enum):
+    """Enumeration that represents a database syntax."""
     NEO = "neo4j"
     POSTGRES = "postgresql"
     MONGO = "mongodb"
 
 
-def analyze_query(query: str | dict):
+def analyze_query(query: str | dict) -> Syntax:
+    """
+    Analyses a database query based on its syntax.
+
+    :param query:   Database query to be analysed
+    :return:        Syntax object, matching the query syntax
+    """
     if isinstance(query, dict):
         return Syntax.MONGO
 
