@@ -1,9 +1,15 @@
-from neo4j import GraphDatabase
+"""This module sets up a neo4j server."""
+
 import random
+
+from neo4j import GraphDatabase
+
 import credentials as creds
 
 
 def setup():
+    """Clears the existing neo database and populates it with team mapping data."""
+
     uri = "bolt://localhost:7687"
     username = 'neo4j'
     password = creds.NEO4J_PASSWORD
@@ -15,7 +21,12 @@ def setup():
         session.write_transaction(create_test_data)
 
 
-def create_test_data(tx):
+def create_test_data(tx) -> None:
+    """
+    Creates test data for projects, teams and employees with relationships.
+
+    :param tx: neo4j transaction unit
+    """
     projects = [
         {"id": "p0001", "name": "Pearl", "budget": 10000},
         {"id": "p0002", "name": "Haven", "budget": 20000},
@@ -59,27 +70,23 @@ def create_test_data(tx):
         "Yvonne Schneider"
     ]
 
-    # Erstelle Mitarbeiter
     employees = [
         {"id": f"e{i + 1}", "name": name, "Abteilung": f"Dept {i % 3}"}
         for i, name in enumerate(employee_names)
     ]
 
-    # Knoten für Projekte erstellen
     for project in projects:
         tx.run(
             "CREATE (p:Project {id: $id, name: $name, budget: $budget})",
             id=project["id"], name=project["name"], budget=project["budget"]
         )
 
-    # Knoten für Teams erstellen
     for team in teams:
         tx.run(
             "CREATE (t:Team {id: $id, name: $name})",
             id=team["id"], name=team["name"]
         )
 
-    # Knoten für Mitarbeiter erstellen
     for employee in employees:
         tx.run(
             "CREATE (e:Employee {id: $id, name: $name, Abteilung: $Abteilung})",
@@ -96,7 +103,6 @@ def create_test_data(tx):
             employee_id=employee['id'], team_id=team_id
         )
 
-    # Kanten für Teams und Projekte erstellen
     project_teams = {}
     for project in projects:
         teams_for_project = random.sample(teams, k=random.randint(1, 2))
@@ -108,7 +114,6 @@ def create_test_data(tx):
                 team_id=team['id'], project_id=project['id']
             )
 
-    # Verantwortlichen für jedes Projekt festlegen
     for project_id, team_ids in project_teams.items():
         responsible_employee = random.choice(employees)
         tx.run(

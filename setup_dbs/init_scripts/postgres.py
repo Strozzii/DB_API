@@ -1,4 +1,4 @@
-"""This module sets up a PostgreSQL server"""
+"""This module sets up a PostgreSQL server."""
 
 import random
 from datetime import datetime, timedelta

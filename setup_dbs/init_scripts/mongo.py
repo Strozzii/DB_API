@@ -1,9 +1,14 @@
+"""This module sets up a mongo server."""
+
 import json
 import os.path
+
 from pymongo import MongoClient
 
 
 def setup():
+    """Clears the existing Mongo database and populates it with test risk data from a json-file."""
+
     client = MongoClient('mongodb://localhost:27017/')
     db = client['mongo']
     collection = db['risks']
