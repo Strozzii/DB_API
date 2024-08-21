@@ -17,11 +17,8 @@ class DataBase:
     def __init__(self) -> None:
         """Inits the Database object."""
 
-        uri = "bolt://localhost:7687"
-        username = 'neo4j'
-        password = creds.NEO4J_PASSWORD
-
-        driver = GraphDatabase.driver(uri, auth=(username, password))
+        driver = GraphDatabase.driver(uri=creds.NEO["uri"],
+                                      auth=(creds.NEO["username"], creds.NEO["password"]))
         self.conn = driver.session()
 
     def get_data(self, elements: str, atts: list, limit: int) -> pd.DataFrame:

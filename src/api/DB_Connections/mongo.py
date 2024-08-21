@@ -6,6 +6,8 @@ from typing import Any
 import pandas as pd
 from pymongo import MongoClient
 
+import credentials as creds
+
 
 class DataBase:
     """
@@ -18,8 +20,8 @@ class DataBase:
     def __init__(self):
         """Inits the Database object."""
 
-        client = MongoClient('mongodb://localhost:27017/')
-        self.conn = client['mongo']
+        client = MongoClient(creds.MONGO["host"])
+        self.conn = client[creds.MONGO["db"]]
 
     def get_data(self, collection: str, atts: list, limit: int) -> pd.DataFrame:
         """

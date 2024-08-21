@@ -18,11 +18,11 @@ class DataBase:
         """Inits the Database object."""
 
         self.conn = psycopg2.connect(
-            dbname="postgres",
-            user="postgres",
-            password=creds.POSTGRES_PASSWORD,
-            host="localhost",
-            port="5432"
+            dbname=creds.POSTGRES['dbname'],
+            user=creds.POSTGRES['user'],
+            password=creds.POSTGRES['password'],
+            host=creds.POSTGRES['host'],
+            port=creds.POSTGRES['5432']
         )
 
     def get_data(self, table: str, atts: list, limit: int) -> pd.DataFrame:
