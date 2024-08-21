@@ -96,6 +96,45 @@ class DataDispenser:
                                  atts=atts,
                                  limit=limit)
 
+    def get_top_x_expenses(self, x: int = 5) -> pd.DataFrame:
+        """
+        Explicit method call to get the top x entries by value as a result.
+
+        :param x: Determines the number of largest entries
+        :return: Result as Pandas DataFrame
+        """
+        return self.postgres.get_data_from_query(f"SELECT * FROM ausgaben ORDER BY amount DESC LIMIT {x}")
+
+    def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
+        """
+        Explicit method call to get entries in a specific date range.
+
+        :param start: Start interval
+        :param end: End interval
+        :return: Result as Pandas DataFrame
+        """
+
+        base_query = "SELECT * FROM ausgaben WHERE expense_date "
+
+        if start and not end:
+            base_query += f">= '{start}'"
+
+        elif not start and end:
+            base_query += f"<= '{end}'"
+
+        elif start and end:
+            base_query += f"BETWEEN '{start}' AND '{end}'"
+
+        else:
+            raise ValueError("You need to provide at least one date as start or end!")
+
+        try:
+            return self.postgres.get_data_from_query(query=base_query)
+        except Exception as e:
+            print(e)
+            print("Dates have the format yyyy-mm-dd (e.g. 2023-01-24)")
+
+
 
 
 

@@ -31,6 +31,12 @@ class Main:
         df2 = self.data.get_data(query={'risk_id': 1}, collection="risks")
         df3 = self.data.get_data(query="match (n)-[r]-(t) return n, r, t")
 
+        # Using template methods to extract data for a specific use case
+        expense_df1 = self.data.get_top_x_expenses(x=10)
+        expense_df2 = self.data.get_expenses_by_date(start="2023-02-05")
+
+        print(expense_df2.to_markdown())
+
 
 if __name__ == "__main__":
     main = Main()

@@ -22,7 +22,7 @@ class DataBase:
             user=creds.POSTGRES['user'],
             password=creds.POSTGRES['password'],
             host=creds.POSTGRES['host'],
-            port=creds.POSTGRES['5432']
+            port=creds.POSTGRES['port']
         )
 
     def get_data(self, table: str, atts: list, limit: int) -> pd.DataFrame:
