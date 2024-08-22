@@ -24,9 +24,7 @@ class DataDispenser:
     def __init__(self) -> None:
         """Inits the DataCart Class."""
 
-        self.postgres = Postgres()
-        self.neo = Neo()
-        self.mongo = Mongo()
+        self.db = None
 
     def get_data(self, query: str | dict, **kwargs: Any) -> pd.DataFrame:
         """
@@ -47,13 +45,15 @@ class DataDispenser:
 
         match syntax:
             case Syntax.POSTGRES:
-                return self.postgres.get_data_from_query(query=query)
+                self.db = Postgres()
             case Syntax.MONGO:
-                return self.mongo.get_data_from_query(query=query, **kwargs)
+                self.db = Mongo()
             case Syntax.NEO:
-                return self.neo.get_data_from_query(query=query)
+                self.db = Neo()
             case _:
                 raise ValueError("Your query is not valid or not supported yet...")
+
+        self.db.get_data_from_query(query=query, **kwargs)
 
     def get_postgres_data(self, table: str, atts: list, limit: int = 365) -> pd.DataFrame:
         """
@@ -128,11 +128,8 @@ class DataDispenser:
         else:
             raise ValueError("You need to provide at least one date as start or end!")
 
-        try:
-            return self.postgres.get_data_from_query(query=base_query)
-        except Exception as e:
-            print(e)
-            print("Dates have the format yyyy-mm-dd (e.g. 2023-01-24)")
+        return self.postgres.get_data_from_query(query=base_query)
+
 
 
 

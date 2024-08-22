@@ -50,11 +50,13 @@ class DataBase:
 
         return df
 
-    def get_data_from_query(self, query: str) -> pd.DataFrame:
+    def get_data_from_query(self, query: str, **kwargs) -> pd.DataFrame:
         """
         Extracts data from the database based on a query.
 
         :param query:   Cypher query for extracting data from the database
+        :param kwargs:  Not supported yet
+        :return:        Pandas DataFrame as result
         """
 
         try:
