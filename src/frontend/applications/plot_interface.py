@@ -7,10 +7,12 @@ from matplotlib import pyplot as plt
 class PlotInterface:
     """Handles all plot creations."""
 
-    def make_bar_graph(self, df: pd.DataFrame, title: str) -> None:
+    def make_bar_graph(self, df: pd.DataFrame, x: str, y: str, title: str) -> None:
         """
         Shows a plot as a bar graph based on a Pandas DataFrame.
 
+        :param x:       x-axes values
+        :param y:       y-axes values
         :param df:      Pandas DataFrames with data to show
         :param title:   Label above the plot to identify the plot
         """
@@ -19,7 +21,7 @@ class PlotInterface:
         self._destroy()
 
         # Plotting
-        plt.bar(x=df["expense_date"], height=df["amount"])
+        plt.bar(x=df[x], height=df[y])
 
         # Plot configuration
         plt.title(title)
