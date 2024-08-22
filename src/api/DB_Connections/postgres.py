@@ -3,7 +3,7 @@
 import psycopg2
 import pandas as pd
 
-import credentials as creds
+from src.api.login_objects import PostgresLogin
 
 
 class DataBase:
@@ -14,15 +14,15 @@ class DataBase:
         conn: Connection instance to communicate with a Postgres database
     """
 
-    def __init__(self) -> None:
+    def __init__(self, login: PostgresLogin) -> None:
         """Inits the Database object."""
 
         self.conn = psycopg2.connect(
-            dbname=creds.POSTGRES['dbname'],
-            user=creds.POSTGRES['user'],
-            password=creds.POSTGRES['password'],
-            host=creds.POSTGRES['host'],
-            port=creds.POSTGRES['port']
+            dbname=login.dbname,
+            user=login.user,
+            password=login.password,
+            host=login.host,
+            port=login.port
         )
 
     def get_data(self, table: str, atts: list, limit: int) -> pd.DataFrame:

@@ -4,6 +4,7 @@ from typing import Any
 
 import pandas as pd
 
+from src.api.login_objects import BaseLogin
 from src.api.query_analyzer import Syntax, analyze_query
 from src.api.DB_Connections.postgres import DataBase as Postgres
 from src.api.DB_Connections.neo import DataBase as Neo
@@ -26,10 +27,11 @@ class DataDispenser:
 
         self.db = None
 
-    def get_data(self, query: str | dict, **kwargs: Any) -> pd.DataFrame:
+    def get_data(self, login: Any, query: str | dict, **kwargs: Any) -> pd.DataFrame:
         """
         Calls any database-object based on the syntax of the query.
 
+        :param login: Login-Object to dynamically connect to a database
         :param query: Query for extracting data from the database, this can be
             a string for everything or a dict for MongoDB
         :param kwargs: Additional Arguments to specify the query,
@@ -45,15 +47,15 @@ class DataDispenser:
 
         match syntax:
             case Syntax.POSTGRES:
-                self.db = Postgres()
+                self.db = Postgres(login=login)
             case Syntax.MONGO:
-                self.db = Mongo()
+                self.db = Mongo(login=login)
             case Syntax.NEO:
-                self.db = Neo()
+                self.db = Neo(login=login)
             case _:
                 raise ValueError("Your query is not valid or not supported yet...")
 
-        self.db.get_data_from_query(query=query, **kwargs)
+        return self.db.get_data_from_query(query=query, **kwargs)
 
     def get_postgres_data(self, table: str, atts: list, limit: int = 365) -> pd.DataFrame:
         """

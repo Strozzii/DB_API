@@ -3,7 +3,7 @@
 import pandas as pd
 from neo4j import GraphDatabase
 
-import credentials as creds
+from src.api.login_objects import NeoLogin
 
 
 class DataBase:
@@ -14,11 +14,11 @@ class DataBase:
         conn: Connection instance to communicate with a neo4j database
     """
 
-    def __init__(self) -> None:
+    def __init__(self, login: NeoLogin) -> None:
         """Inits the Database object."""
 
-        driver = GraphDatabase.driver(uri=creds.NEO["uri"],
-                                      auth=(creds.NEO["username"], creds.NEO["password"]))
+        driver = GraphDatabase.driver(uri=login.host,
+                                      auth=(login.username, login.password))
         self.conn = driver.session()
 
     def get_data(self, elements: str, atts: list, limit: int) -> pd.DataFrame:
