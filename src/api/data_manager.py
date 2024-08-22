@@ -11,13 +11,13 @@ from src.api.DB_Connections.neo import DataBase as Neo
 from src.api.DB_Connections.mongo import DataBase as Mongo
 
 
-class DataDispenser:
+class DataManager:
     """
     Represents the API object.
     All databases need to be implemented as instance variables.
 
     Attributes:
-        db: Instance for communication with a database
+        db: Instance for communication with supported database technologies (PostgreSQL, MongoDB, neo4j)
     """
 
     def __init__(self) -> None:
@@ -37,7 +37,7 @@ class DataDispenser:
         :return: Pandas DataFrame as result
         """
 
-        # The analyser does not need to worry about the query being available
+        # The analyzer does not need to worry about the query being available
         if not query:
             raise ValueError("You need to pass a query to get a response!")
 
@@ -108,7 +108,7 @@ class DataDispenser:
         :return: Result as Pandas DataFrame
         """
 
-        return self.postgres.get_data_from_query(f"SELECT * FROM ausgaben ORDER BY amount DESC LIMIT {x}")
+        return self.db.get_data_from_query(f"SELECT * FROM ausgaben ORDER BY amount DESC LIMIT {x}")
 
     def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
         """
@@ -133,7 +133,7 @@ class DataDispenser:
         else:
             raise ValueError("You need to provide at least one date as start or end!")
 
-        return self.postgres.get_data_from_query(query=base_query)
+        return self.db.get_data_from_query(query=base_query)
 
 
 

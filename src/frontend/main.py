@@ -1,7 +1,7 @@
 """This module is testing the API."""
 
 import credentials as creds
-from src.api.data_dispenser import DataDispenser
+from src.api.data_manager import DataManager
 from src.frontend.applications.plot_interface import PlotInterface
 
 
@@ -16,7 +16,7 @@ class Main:
 
     def __init__(self) -> None:
         """Inits the Main Class."""
-        self.data = DataDispenser()
+        self.data = DataManager()
         self.plot = PlotInterface()
 
     def run(self) -> None:
