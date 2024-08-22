@@ -42,13 +42,7 @@ class DataBase:
 
         sql = f"SELECT {attrs_str} FROM {table} LIMIT {limit}"
 
-        try:
-            df = pd.read_sql(sql, con=self.conn)
-        except Exception as e:
-            print(e)
-            df = pd.DataFrame()
-
-        return df
+        return self.get_data_from_query(query=sql)
 
     def get_data_from_query(self, query: str, **kwargs) -> pd.DataFrame:
         """
@@ -61,8 +55,16 @@ class DataBase:
 
         try:
             df = pd.read_sql(query, con=self.conn)
+
         except Exception as e:
             print(e)
             df = pd.DataFrame()
 
+        finally:
+            self._close_connection()
+
         return df
+
+    def _close_connection(self) -> None:
+        """Close the connection."""
+        self.conn.close()

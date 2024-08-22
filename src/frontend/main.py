@@ -23,12 +23,12 @@ class Main:
         """Runs the script to simulate the frontend."""
 
         # Simple approach to call a specific database to get its data
-        # postgres_df = self.data.get_postgres_data(table="ausgaben", atts=["id", "expense_type", "amount"], limit=9)
-        # mongo_df = self.data.get_mongo_data(collection="risks", atts=["title", "category"], limit=4)
-        # neo_df = self.data.get_neo_data(elements="(e : Employee)", atts=['e.name', 'e.id'])
-        # print(postgres_df.to_markdown())
-        # print(mongo_df.to_markdown())
-        # print(neo_df.to_markdown())
+        postgres_df = self.data.get_postgres_data(login=creds.FINANCE_LOGIN, table="ausgaben", atts=["id", "expense_type", "amount"], limit=9)
+        mongo_df = self.data.get_mongo_data(login=creds.RISK_MGMT_LOGIN, atts=["title", "category"], limit=4)
+        neo_df = self.data.get_neo_data(login=creds.TEAM_MAPPING_LOGIN, elements="(e : Employee)", atts=['e.name', 'e.id'])
+        print(postgres_df.to_markdown())
+        print(mongo_df.to_markdown())
+        print(neo_df.to_markdown())
 
         # Generic approach to call any database that can handle this query
         df1 = self.data.get_data(login=creds.FINANCE_LOGIN, query="SELECT amount FROM ausgaben LIMIT 10")

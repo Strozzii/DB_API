@@ -14,6 +14,7 @@ class DataBase:
     Represents an object which communicates with a MongoDB database.
 
     attributes:
+        client:     MongoClient instance
         conn:       Connection instance to communicate with a MongoDB database
         collection: Selection of a specific collection
     """
@@ -21,8 +22,8 @@ class DataBase:
     def __init__(self, login: MongoLogin):
         """Inits the Database object."""
 
-        client = MongoClient(login.host)
-        self.conn = client[login.db]
+        self.client = MongoClient(login.host)
+        self.conn = self.client[login.db]
         self.collection = login.collection
 
     def get_data(self, atts: list, limit: int) -> pd.DataFrame:
@@ -42,7 +43,6 @@ class DataBase:
         projection['_id'] = 0
 
         try:
-
             coll = self.conn[self.collection]
 
             # Daten abfragen
@@ -54,9 +54,13 @@ class DataBase:
 
             # Erstellen eines DataFrames
             df = pd.DataFrame(data)
+
         except Exception as e:
             print(e)
             df = pd.DataFrame()
+
+        finally:
+            self._close_client()
 
         return df
 
@@ -89,4 +93,13 @@ class DataBase:
             print(e)
             df = pd.DataFrame()
 
+        finally:
+            self._close_client()
+
         return df
+
+    def _close_client(self) -> None:
+        """Cleanup client resources and disconnect from MongoDB."""
+        self.conn = None
+        self.collection = None
+        self.client.close()
