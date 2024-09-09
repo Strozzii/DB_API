@@ -3,6 +3,7 @@
 import psycopg2
 import pandas as pd
 
+from src.api import json_converter as jsc
 from src.api.login_objects import PostgresLogin
 
 
@@ -55,6 +56,7 @@ class DataBase:
 
         try:
             df = pd.read_sql(query, con=self.conn)
+            jsc.dataframe_to_json(df=df, title="postgres")
 
         except Exception as e:
             print(e)

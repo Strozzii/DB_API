@@ -3,6 +3,7 @@
 import pandas as pd
 from neo4j import GraphDatabase
 
+from src.api import json_converter as jsc
 from src.api.login_objects import NeoLogin
 
 
@@ -22,7 +23,7 @@ class DataBase:
                                            auth=(login.username, login.password))
         self.conn = self.driver.session()
 
-    def get_data(self, elements: str, atts: list, limit: int) -> pd.DataFrame:
+    def get_data(self, elements: str, atts: list, limit: int):
         """
         Extracts data from the database based on arguments which specifies the Cypher query.
 
@@ -40,7 +41,7 @@ class DataBase:
 
         return self.get_data_from_query(query=cypher_query)
 
-    def get_data_from_query(self, query: str, **kwargs) -> pd.DataFrame:
+    def get_data_from_query(self, query: str, **kwargs):
         """
         Extracts data from the database based on a query.
 
@@ -51,17 +52,31 @@ class DataBase:
 
         try:
             result = self.conn.run(query)
-            data = [record.data() for record in result]
-            df = pd.DataFrame(data)
+            records = []
+            for record in result.data():
+                record_dict = {}
+
+                for key, value in record.items():
+                    if isinstance(value, tuple) and len(value) == 3:
+                        _, relationship_name, _ = value
+                        record_dict[key] = relationship_name
+                    elif isinstance(value, dict):
+                        record_dict[key] = dict(value)
+                    else:
+                        record_dict[key] = value
+
+                records.append(record_dict)
+
+            jsc.convert_list_to_json(records, "neo")
 
         except Exception as e:
             print(e)
-            df = pd.DataFrame()
+            result = []
 
         finally:
             self._close_driver()
 
-        return df
+        return result
 
     def _close_driver(self) -> None:
         """Shuts down, closing any open connections in the pool."""

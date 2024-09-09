@@ -9,6 +9,9 @@ from src.api.query_analyzer import Syntax, analyze_query
 from src.api.DB_Connections.postgres import DataBase as Postgres
 from src.api.DB_Connections.neo import DataBase as Neo
 from src.api.DB_Connections.mongo import DataBase as Mongo
+from src.api.DB_Scripts.risk_db import RiskDB
+from src.api.DB_Scripts.finance_db import FinanceDB
+from src.api.DB_Scripts.team_mapping_db import TeamsDB
 
 
 class DataManager:
@@ -100,17 +103,7 @@ class DataManager:
                                 atts=atts,
                                 limit=limit)
 
-    def get_top_x_expenses(self, x: int = 5) -> pd.DataFrame:
-        """
-        Explicit method call to get the top x entries by value as a result.
-
-        :param x: Determines the number of largest entries
-        :return: Result as Pandas DataFrame
-        """
-
-        return self.db.get_data_from_query(f"SELECT * FROM ausgaben ORDER BY amount DESC LIMIT {x}")
-
-    def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
+    def get_expenses_by_date(self, start: str = "", end: str = ""):
         """
         Explicit method call to get entries in a specific date range.
 
@@ -119,27 +112,18 @@ class DataManager:
         :return: Result as Pandas DataFrame
         """
 
-        base_query = "SELECT * FROM ausgaben WHERE expense_date "
+        self.db = FinanceDB()
 
-        if start and not end:
-            base_query += f">= '{start}'"
+        return self.db.get_expenses_by_date(start=start, end=end)
 
-        elif not start and end:
-            base_query += f"<= '{end}'"
+    def get_mitigation_plan(self, risk_id: str) :
 
-        elif start and end:
-            base_query += f"BETWEEN '{start}' AND '{end}'"
+        self.db = RiskDB()
 
-        else:
-            raise ValueError("You need to provide at least one date as start or end!")
+        return self.db.get_mitigation_plan(risk_id=risk_id)
 
-        return self.db.get_data_from_query(query=base_query)
+    def get_all_project_leader(self):
 
+        self.db = TeamsDB()
 
-
-
-
-
-
-
-
+        return self.db.get_all_project_leader()
