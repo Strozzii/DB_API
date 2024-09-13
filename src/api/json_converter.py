@@ -29,7 +29,7 @@ def dataframe_to_json(df: pd.DataFrame, title: str):
     """Exports a JSON file from a Pandas DataFrame."""
 
     try:
-        json_data = df.to_json(orient='records', indent=c.JSON_INDENT)
+        json_data = df.to_json(orient='records', indent=c.JSON_INDENT, force_ascii=False)
         file_path = os.path.join(c.EXPORT_DIR, f"{title}.json")
 
         if file_path:
