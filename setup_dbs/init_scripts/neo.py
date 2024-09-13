@@ -3,17 +3,18 @@
 import random
 from datetime import timedelta, datetime
 
+import neo4j
 from neo4j import GraphDatabase
 
-import credentials as creds
+from credentials import NeoLogin as nl
 
 
 def setup():
-    """Clears the existing neo database and populates it with team mapping data."""
+    """Clears the existing neo database and populates it with random team mapping data."""
 
-    uri = "bolt://localhost:7687"
-    username = 'neo4j'
-    password = "normale_kartoffeln_auf_die_1"
+    uri = nl.host
+    username = nl.username
+    password = nl.password
 
     driver = GraphDatabase.driver(uri, auth=(username, password))
 
@@ -22,16 +23,18 @@ def setup():
         session.write_transaction(create_test_data)
 
 
-def random_date(start, end):
+def random_date(start: datetime, end: datetime) -> datetime:
+    """Returns a random date between a start and an end date."""
     return start + timedelta(days=random.randint(0, (end - start).days))
 
 
-def random_role():
+def random_role() -> str:
+    """Returns a random role of an Employee."""
     roles = ["Developer", "Tester", "Architect"]
     return random.choice(roles)
 
 
-def create_test_data(tx) -> None:
+def create_test_data(tx: neo4j.ManagedTransaction) -> None:
     """
     Creates test data for projects, teams and employees with relationships.
 

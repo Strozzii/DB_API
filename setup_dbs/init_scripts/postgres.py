@@ -6,34 +6,31 @@ from datetime import datetime, timedelta
 import psycopg2
 from psycopg2 import sql
 
-import credentials as creds
+from credentials import PostgresLogin as pl
 
 
 def setup(number: int = 100):
     """
-    Clears the existing Mongo database and populates it with test financial data
+    Clears the existing Mongo database and populates it with random financial data.
 
     :param number: Number of test data (Default: 100)
     """
 
-    # Create DB instance
     conn = psycopg2.connect(
-        dbname="postgres",
-        user="postgres",
-        password=creds.POSTGRES_PASSWORD,
-        host="localhost",
-        port="5432"
+        dbname=pl.dbname,
+        user=pl.user,
+        password=pl.password,
+        host=pl.host,
+        port=pl.port
     )
     cur = conn.cursor()
 
-    # Clear database
     drop_table_query = sql.SQL("DROP TABLE IF EXISTS {table_name}").format(
         table_name=sql.Identifier('ausgaben')
     )
     cur.execute(drop_table_query)
     conn.commit()
 
-    # Setup part
     cur.execute('''
         CREATE TABLE IF NOT EXISTS ausgaben (
             id SERIAL PRIMARY KEY,
@@ -51,7 +48,6 @@ def setup(number: int = 100):
                      "Consulting", "Sonstiges"]
     currencies = ["USD", "EUR", "GBP"]
 
-    # Test data has timestamp starting from 01.01.2023
     start_date = datetime(2023, 1, 1)
 
     for i in range(number):

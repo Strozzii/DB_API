@@ -38,8 +38,6 @@ class Main:
         # team_dict = self.data.get_all_project_leader()
 
 
-
-
 if __name__ == "__main__":
     main = Main()
     main.run()

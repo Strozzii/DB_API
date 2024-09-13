@@ -1,6 +1,6 @@
 """This module takes care of the exchange between frontend and backend."""
 
-from typing import Any
+from typing import Any, Union
 
 import pandas as pd
 
@@ -17,27 +17,26 @@ from src.api.DB_Scripts.team_mapping_db import TeamsDB
 class DataManager:
     """
     Represents the API object.
-    All databases need to be implemented as instance variables.
 
     Attributes:
         db: Instance for communication with supported database technologies (PostgreSQL, MongoDB, neo4j)
     """
 
     def __init__(self) -> None:
-        """Inits the DataCart Class."""
+        """Inits the DataManager Class."""
 
         self.db = None
 
-    def get_data(self, login: Any, query: str | dict, **kwargs: Any) -> pd.DataFrame:
+    def get_data(self, login: Any, query: str | dict, **kwargs: Any) -> Union[pd.DataFrame, list[dict]]:
         """
         Calls any database-object based on the syntax of the query.
 
-        :param login: Login-Object to dynamically connect to a database
-        :param query: Query for extracting data from the database, this can be
-            a string for everything or a dict for MongoDB
-        :param kwargs: Additional Arguments to specify the query,
-            actually 'collection' and 'limit' are supported for MongoDB
-        :return: Pandas DataFrame as result
+        :param login:   Login-Object to dynamically connect to a database
+        :param query:   Query for extracting data from the database, this can be
+                        a string for everything or a dict for MongoDB
+        :param kwargs:  Additional Arguments to specify the query
+        :return:        Based on the database type, the result is a Pandas DataFrame or a list of dictionaries,
+                        but a JSON file is always exported
         """
 
         # The analyzer does not need to worry about the query being available
@@ -60,13 +59,13 @@ class DataManager:
 
     def get_postgres_data(self, login: PostgresLogin, table: str, atts: list, limit: int = 365) -> pd.DataFrame:
         """
-        Calls the Postgres-object to communicate with the PostgreSQL database.
+        Calls the Postgres-object to communicate with a PostgreSQL database.
 
-        :param login:   Login-Object to dynamically connect to a Postgres database
+        :param login:   Login-Object to connect to a Postgres database
         :param table:   Specifies the table (e.g. FROM <table>)
         :param atts:    Specifies the attributes (e.g. SELECT <atts>)
         :param limit:   Specifies the number of entries in the result (default: 365)
-        :return:        Pandas DataFrame as result
+        :return:        Pandas DataFrame as result and the result as JSON-file
         """
 
         self.db = Postgres(login=login)
@@ -74,55 +73,66 @@ class DataManager:
                                 atts=atts,
                                 limit=limit)
 
-    def get_mongo_data(self, login: MongoLogin, atts: list, limit: int = 100) -> pd.DataFrame:
+    def get_mongo_data(self, login: MongoLogin, atts: list, limit: int = 100) -> list[dict]:
         """
-        Calls the Mongo-object to communicate with the MongoDB database.
+        Calls the Mongo-object to communicate with a MongoDB database.
 
-        :param login:       Login-Object to dynamically connect to a Mongo database
+        :param login:       Login-Object to connect to a Mongo database
         :param atts:        Attributes as search terms
         :param limit:       Number of entries in the resulting dataframe (default: 100)
-        :return:            Pandas DataFrame as result
+        :return:            List of dictionaries as result and the result as JSON-file
         """
 
         self.db = Mongo(login=login)
         return self.db.get_data(atts=atts,
                                 limit=limit)
 
-    def get_neo_data(self, login: NeoLogin, elements: str, atts: list, limit: int = 100) -> pd.DataFrame:
+    def get_neo_data(self, login: NeoLogin, elements: str, atts: list, limit: int = 100) -> list[dict]:
         """
-        Calls the Neo-object to communicate with the neo4j database.
+        Calls the Neo-object to communicate with a neo4j database.
 
-        :param login:       Login-Object to dynamically connect to a Neo database
+        :param login:       Login-Object to connect to a Neo database
         :param elements:    Represents nodes, relationships or paths
         :param atts:        Attributes of the elements as result
         :param limit:       Number of entries in the resulting dataframe (default: 100)
-        :return:            Pandas DataFrame as result
+        :return:            List of dictionaries as result and the result as JSON-file
         """
         self.db = Neo(login=login)
         return self.db.get_data(elements=elements,
                                 atts=atts,
                                 limit=limit)
 
-    def get_expenses_by_date(self, start: str = "", end: str = ""):
+    def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
         """
         Explicit method call to get entries in a specific date range.
 
-        :param start: Start interval
-        :param end: End interval
-        :return: Result as Pandas DataFrame
+        :param start:   Start interval
+        :param end:     End interval
+        :return:        Pandas DataFrame as result and the result as JSON-file
         """
 
         self.db = FinanceDB()
 
         return self.db.get_expenses_by_date(start=start, end=end)
 
-    def get_mitigation_plan(self, risk_id: str):
+    def get_mitigation_plan(self, risk_id: str) -> list[dict]:
+        """
+        Explicit method call to get entries for a specific risk.
+
+        :param risk_id: ID of the specific risk
+        :return:        List of dictionaries as result and the result as JSON-file
+        """
 
         self.db = RiskDB()
 
         return self.db.get_mitigation_plan(risk_id=risk_id)
 
     def get_all_project_leader(self):
+        """
+        Explicit method call to get entries with all employees as project leaders.
+
+        :return: List of dictionaries as result and the result as JSON-file
+        """
 
         self.db = TeamsDB()
 

@@ -33,7 +33,7 @@ class DataBase:
         :param table:   Specifies the table (e.g. FROM <table>)
         :param atts:    Specifies the attributes (e.g. SELECT <atts>)
         :param limit:   Specifies the number of entries in the result (e.g. LIMIT <limit>)
-        :return:        Pandas DataFrame as result
+        :return:        Pandas DataFrame as result of the query and the result as a JSON-file
         """
 
         if not atts:
@@ -45,13 +45,12 @@ class DataBase:
 
         return self.get_data_from_query(query=sql)
 
-    def get_data_from_query(self, query: str, **kwargs) -> pd.DataFrame:
+    def get_data_from_query(self, query: str) -> pd.DataFrame:
         """
         Extracts data from the database based on a query.
 
         :param query:   SQL query for extracting data from the database
-        :param kwargs:  Not supported yet
-        :return:        Pandas DataFrame as result
+        :return:        Pandas DataFrame as result of the query and the result as a JSON-file
         """
 
         try:
@@ -68,5 +67,5 @@ class DataBase:
         return df
 
     def _close_connection(self) -> None:
-        """Close the connection."""
+        """Closes the connection."""
         self.conn.close()

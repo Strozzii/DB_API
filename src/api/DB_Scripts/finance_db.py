@@ -1,18 +1,32 @@
-"""Takes care of the communication with the PostgreSQL database."""
+"""Module that deals specifically with communication with the financial database."""
+
+import pandas as pd
 
 from credentials import FINANCE_LOGIN
 from src.api.DB_Connections.postgres import DataBase as Postgres
 
 
 class FinanceDB:
-    """Represents an object which communicates with the RiskMgmt database."""
+    """
+    Represents an object which communicates with the financial database.
+
+    attributes:
+        db: Database object which communicates with the target database
+    """
 
     def __init__(self) -> None:
         """Inits the Database object."""
 
         self.db = Postgres(login=FINANCE_LOGIN)
 
-    def get_expenses_by_date(self, start: str, end: str):
+    def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
+        """
+        Returns the expenses in a specific time interval. It's possible to leave an argument empty.
+
+        :param start:   Datetime object representing the left interval limit
+        :param end:     Datetime object representing the right interval limit
+        :return:        Pandas DataFrame as result of the query and the result as a JSON-file
+        """
 
         base_query = "SELECT * FROM ausgaben WHERE expense_date "
 

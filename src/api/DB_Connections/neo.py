@@ -1,11 +1,11 @@
 """Takes care of the communication with the neo4j database."""
+
 import neo4j
-import pandas as pd
 from neo4j import GraphDatabase
 
 from src.api import json_converter as jsc
-from src.api.datetime_handler import convert_timestamp
 from src.api.login_objects import NeoLogin
+from src.api.datetime_handler import convert_timestamp
 
 
 class DataBase:
@@ -24,14 +24,14 @@ class DataBase:
                                            auth=(login.username, login.password))
         self.conn = self.driver.session()
 
-    def get_data(self, elements: str, atts: list, limit: int):
+    def get_data(self, elements: str, atts: list, limit: int) -> list[dict]:
         """
         Extracts data from the database based on arguments which specifies the Cypher query.
 
         :param elements:    Represents nodes, relationships or paths
         :param atts:        Attributes of the elements as result
         :param limit:       Number of entries in the resulting dataframe
-        :return:            Pandas DataFrame as result
+        :return:            List of dictionaries as result of the query and the result as a JSON-file
         """
 
         if not atts:
@@ -42,30 +42,39 @@ class DataBase:
 
         return self.get_data_from_query(query=cypher_query)
 
-    def get_data_from_query(self, query: str, **kwargs):
+    def get_data_from_query(self, query: str) -> list[dict]:
         """
         Extracts data from the database based on a query.
 
         :param query:   Cypher query for extracting data from the database
-        :param kwargs:  Not supported yet
-        :return:        Pandas DataFrame as result
+        :return:        List of dictionaries as result of the query
         """
 
         records = []
+
         try:
+            # The result is a neo4j object which needs a little bit of transformation
             result = self.conn.run(query)
 
             for record in result:
                 record_dict = {}
 
+                # FYI: We need to convert timestamps, cause JSON can't natively handle datetime-objects
                 for key, value in record.items():
+
+                    # The usual case for nodes
                     if isinstance(value, dict):
                         record_dict[key] = {k: convert_timestamp(v) for k, v in value.items()}
+
+                    # The case for relationships, the format is kinda scuffed :(
                     elif isinstance(value, neo4j.graph.Relationship):
                         record_dict[key] = {
                             "type": value.type,
                             **{k: convert_timestamp(v) for k, v in dict(value).items()}
                         }
+                    elif isinstance(value, str):
+                        record_dict[key] = value
+
                     else:
                         record_dict[key] = {k: convert_timestamp(v) for k, v in dict(value).items()}
 

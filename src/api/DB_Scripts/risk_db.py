@@ -1,22 +1,29 @@
-"""Takes care of the communication with the PostgreSQL database."""
-from typing import Any
-
-import pandas as pd
-from pymongo import MongoClient
+"""Module that deals specifically with communication with the risk management database."""
 
 from src.api.DB_Connections.mongo import DataBase as Mongo
 from credentials import RISK_MGMT_LOGIN
 
 
 class RiskDB:
-    """Represents an object which communicates with the RiskMgmt database."""
+    """
+    Represents an object which communicates with the risk management database.
+
+    attributes:
+        db: Database object which communicates with the target database
+    """
 
     def __init__(self):
         """Inits the Database object."""
 
         self.db = Mongo(login=RISK_MGMT_LOGIN)
 
-    def get_mitigation_plan(self, risk_id: str) -> pd.DataFrame:
+    def get_mitigation_plan(self, risk_id: str) -> list[dict]:
+        """
+        Returns the mitigation plan of a specific risk.
+
+        :param risk_id: ID of the specific risk
+        :return: List of dictionaries as result of the query and the result as a JSON-file
+        """
 
         query = {
             "mitigation_plan": 1,

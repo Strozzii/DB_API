@@ -5,13 +5,15 @@ import os.path
 
 from pymongo import MongoClient
 
+from credentials import MongoLogin as ml
+
 
 def setup():
     """Clears the existing Mongo database and populates it with test risk data from a json-file."""
 
-    client = MongoClient('mongodb://localhost:27017/')
-    db = client['mongo']
-    collection = db['risks']
+    client = MongoClient(ml.host)
+    db = client[ml.db]
+    collection = db[ml.collection]
 
     collection.drop()
 

@@ -19,20 +19,20 @@ class DataBase:
         collection: Selection of a specific collection
     """
 
-    def __init__(self, login: MongoLogin):
+    def __init__(self, login: MongoLogin) -> None:
         """Inits the Database object."""
 
         self.client = MongoClient(login.host)
         self.conn = self.client[login.db]
         self.collection = login.collection
 
-    def get_data(self, atts: list, limit: int):
+    def get_data(self, atts: list, limit: int) -> list[dict]:
         """
         Extracts data from the database based on arguments which specifies the query.
 
         :param atts:        Attributes as search terms
         :param limit:       Number of entries in the resulting dataframe
-        :return:            Pandas DataFrame as result
+        :return:            List of dictionaries as result of the query and the result as a JSON-file
         """
 
         projection = {}
@@ -43,25 +43,29 @@ class DataBase:
 
         return data
 
-    def get_data_from_query(self, query: str | dict, filter_dict: dict = None, **kwargs: Any):
+    def get_data_from_query(self, query: str | dict, filter_dict: dict = None, **kwargs: Any) -> list[dict]:
         """
         Extracts data from the database based on a query.
 
         :param query:   Query for extracting data from the database, this can be
-            a string for everything or a dict for MongoDB
+            a string or a dict for MongoDB
         :param filter_dict:  Specifies which data should be filtered.
         :param kwargs:  Additional Arguments to specify the query,
             actually 'limit' is supported for MongoDB
-        :return:        Pandas DataFrame as result
+        :return:        List of dictionaries as result of the query
         """
 
+        # MongoClient only handles dicts, so we need to evaluate a string as a dict if it has the right format
         if isinstance(query, str):
             query = ast.literal_eval(query)
 
         if not filter_dict:
             filter_dict = {}
 
+        # We don't need the object-id from Mongo
         query['_id'] = 0
+
+        data = []
 
         try:
             coll = self.conn[self.collection]
@@ -76,7 +80,6 @@ class DataBase:
 
         except Exception as e:
             print(e)
-            data = []
 
         finally:
             self._close_client()
@@ -84,7 +87,7 @@ class DataBase:
         return data
 
     def _close_client(self) -> None:
-        """Cleanup client resources and disconnect from MongoDB."""
+        """Cleans up client resources and disconnect from MongoDB."""
         self.conn = None
         self.collection = None
         self.client.close()
