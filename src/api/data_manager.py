@@ -116,7 +116,7 @@ class DataManager:
 
         return self.db.get_expenses_by_date(start=start, end=end)
 
-    def get_mitigation_plan(self, risk_id: str) :
+    def get_mitigation_plan(self, risk_id: str):
 
         self.db = RiskDB()
 

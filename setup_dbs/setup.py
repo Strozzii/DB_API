@@ -4,6 +4,6 @@ from init_scripts import postgres, mongo, neo
 
 if __name__ == "__main__":
 
-    mongo.setup()
-    postgres.setup()
+    # mongo.setup()
+    # postgres.setup()
     neo.setup()

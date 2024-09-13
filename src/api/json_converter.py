@@ -1,13 +1,18 @@
+from datetime import datetime
 import json
 
 import src.api.constants as c
+from src.api.datetime_handler import custom_json_encoder
 
 
 def convert_list_to_json(data_list: list[dict], title: str):
     try:
         file_path = f"E:\\DB_API\\src\\frontend\\export\\{title}.json"
-        json_data = json.dumps(data_list, indent=c.JSON_INDENT)
 
+        # Verwende json.dumps mit dem benutzerdefinierten Encoder
+        json_data = json.dumps(data_list, indent=4, default=custom_json_encoder, ensure_ascii=False)
+
+        # Schreibe die JSON-Daten in die Datei
         if file_path:
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(json_data)

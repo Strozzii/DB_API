@@ -1,6 +1,7 @@
 """This module sets up a neo4j server."""
 
 import random
+from datetime import timedelta, datetime
 
 from neo4j import GraphDatabase
 
@@ -12,13 +13,22 @@ def setup():
 
     uri = "bolt://localhost:7687"
     username = 'neo4j'
-    password = creds.NEO4J_PASSWORD
+    password = "normale_kartoffeln_auf_die_1"
 
     driver = GraphDatabase.driver(uri, auth=(username, password))
 
     with driver.session() as session:
         session.run("MATCH (n) DETACH DELETE n")
         session.write_transaction(create_test_data)
+
+
+def random_date(start, end):
+    return start + timedelta(days=random.randint(0, (end - start).days))
+
+
+def random_role():
+    roles = ["Developer", "Tester", "Architect"]
+    return random.choice(roles)
 
 
 def create_test_data(tx) -> None:
@@ -97,27 +107,31 @@ def create_test_data(tx) -> None:
     for employee in employees:
         team_id = random.choice(teams)['id']
         team_employees[team_id].append(employee['id'])
+        since_date = random_date(datetime(2022, 1, 1), datetime(2024, 6, 15))
         tx.run(
             "MATCH (e:Employee {id: $employee_id}), (t:Team {id: $team_id}) "
-            "CREATE (e)-[:GEHOERT_ZU]->(t)",
-            employee_id=employee['id'], team_id=team_id
+            "CREATE (e)-[:GEHOERT_ZU {since: $since_date}]->(t)",
+            employee_id=employee['id'], team_id=team_id, since_date=since_date
         )
 
     project_teams = {}
     for project in projects:
         teams_for_project = random.sample(teams, k=random.randint(1, 2))
         project_teams[project['id']] = [team['id'] for team in teams_for_project]
+        start_date = random_date(datetime(2022, 1, 1), datetime(2024, 6, 15))
         for team in teams_for_project:
             tx.run(
                 "MATCH (t:Team {id: $team_id}), (p:Project {id: $project_id}) "
-                "CREATE (t)-[:ARBEITEN_AN]->(p)",
-                team_id=team['id'], project_id=project['id']
+                "CREATE (t)-[:ARBEITEN_AN {start_date: $start_date}]->(p)",
+                team_id=team['id'], project_id=project['id'], start_date=start_date
             )
 
     for project_id, team_ids in project_teams.items():
         responsible_employee = random.choice(employees)
+        since_date = random_date(datetime(2022, 1, 1), datetime(2024, 6, 15))
+        role = random_role()
         tx.run(
             "MATCH (e:Employee {id: $employee_id}), (p:Project {id: $project_id}) "
-            "CREATE (e)-[:VERANTWORTLICH_FUER]->(p)",
-            employee_id=responsible_employee['id'], project_id=project_id
+            "CREATE (e)-[:VERANTWORTLICH_FUER {role: $role, since: $since_date}]->(p)",
+            employee_id=responsible_employee['id'], project_id=project_id, role=role, since_date=since_date
         )

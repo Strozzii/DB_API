@@ -28,9 +28,9 @@ class Main:
         # neo4j_team_target_dict = self.data.get_neo_data(login=creds.TEAM_MAPPING_LOGIN, elements="(e : Employee)", atts=['e.name', 'e.id'])
 
         # Generic approach to call any database that can handle this query
-        # postgres_finance_df = self.data.get_data(login=creds.FINANCE_LOGIN, query="SELECT amount FROM ausgaben LIMIT 10")
-        # mongodb_risk_dict = self.data.get_data(login=creds.RISK_MGMT_LOGIN, query={'risk_id': 1})
-        # neo4j_team_dict = self.data.get_data(login=creds.TEAM_MAPPING_LOGIN, query="match (n: Employee)-[r]-(t: Team) return n.name AS employee, r AS relation, t.name AS team")
+        postgres_finance_df = self.data.get_data(login=creds.FINANCE_LOGIN, query="SELECT * FROM ausgaben LIMIT 10")
+        mongodb_risk_dict = self.data.get_data(login=creds.RISK_MGMT_LOGIN, query={'risk_id': 1})
+        neo4j_team_dict = self.data.get_data(login=creds.TEAM_MAPPING_LOGIN, query="MATCH (e:Employee)-[r:GEHOERT_ZU]->(t:Team) RETURN e, r, t")
 
         # Specific approach to target specific data from specific databases
         # finance_df = self.data.get_expenses_by_date(start="2023-02-15", end="2023-03-01")

@@ -1,9 +1,10 @@
 """Takes care of the communication with the neo4j database."""
-
+import neo4j
 import pandas as pd
 from neo4j import GraphDatabase
 
 from src.api import json_converter as jsc
+from src.api.datetime_handler import convert_timestamp
 from src.api.login_objects import NeoLogin
 
 
@@ -50,20 +51,23 @@ class DataBase:
         :return:        Pandas DataFrame as result
         """
 
+        records = []
         try:
             result = self.conn.run(query)
-            records = []
-            for record in result.data():
+
+            for record in result:
                 record_dict = {}
 
                 for key, value in record.items():
-                    if isinstance(value, tuple) and len(value) == 3:
-                        _, relationship_name, _ = value
-                        record_dict[key] = relationship_name
-                    elif isinstance(value, dict):
-                        record_dict[key] = dict(value)
+                    if isinstance(value, dict):
+                        record_dict[key] = {k: convert_timestamp(v) for k, v in value.items()}
+                    elif isinstance(value, neo4j.graph.Relationship):
+                        record_dict[key] = {
+                            "type": value.type,
+                            **{k: convert_timestamp(v) for k, v in dict(value).items()}
+                        }
                     else:
-                        record_dict[key] = value
+                        record_dict[key] = {k: convert_timestamp(v) for k, v in dict(value).items()}
 
                 records.append(record_dict)
 
@@ -71,12 +75,11 @@ class DataBase:
 
         except Exception as e:
             print(e)
-            result = []
 
         finally:
             self._close_driver()
 
-        return result
+        return records
 
     def _close_driver(self) -> None:
         """Shuts down, closing any open connections in the pool."""
