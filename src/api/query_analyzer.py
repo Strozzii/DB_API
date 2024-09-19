@@ -15,7 +15,7 @@ def analyze_query(query: str | dict) -> Syntax:
     Analyses a database query based on its syntax.
 
     :param query:   Database query to be analysed
-    :return:        Syntax object, matching the query syntax
+    :return:        Type of syntax as string, matching the query
     """
     if isinstance(query, dict):
         return Syntax.MONGO
