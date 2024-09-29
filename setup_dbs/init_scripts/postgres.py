@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import psycopg2
 from psycopg2 import sql
 
-from credentials import PostgresLogin as pl
+from src.api.credentials import PostgresLogin as pl
 
 
 def setup(number: int = 100):

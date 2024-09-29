@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from credentials import FINANCE_LOGIN
+from src.api.credentials import FINANCE_LOGIN
 from src.api.DB_Connections.postgres import DataBase as Postgres
 
 
@@ -17,7 +17,7 @@ class FinanceDB:
     def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.db = Postgres(login=FINANCE_LOGIN)
+        self.db = Postgres()
 
     def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
         """

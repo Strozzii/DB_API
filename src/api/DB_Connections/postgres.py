@@ -4,7 +4,7 @@ import psycopg2
 import pandas as pd
 
 from src.api import json_converter as jsc
-from src.api.login_objects import PostgresLogin
+from src.api.credentials import POSTGRES_CREDS as LOGIN
 
 
 class DataBase:
@@ -15,16 +15,10 @@ class DataBase:
         conn: Connection instance to communicate with a Postgres database
     """
 
-    def __init__(self, login: PostgresLogin) -> None:
+    def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.conn = psycopg2.connect(
-            dbname=login.dbname,
-            user=login.user,
-            password=login.password,
-            host=login.host,
-            port=login.port
-        )
+        self.conn = LOGIN
 
     def get_data(self, table: str, atts: list, limit: int) -> pd.DataFrame:
         """
@@ -53,19 +47,30 @@ class DataBase:
         :return:        Pandas DataFrame as result of the query and the result as a JSON-file
         """
 
-        try:
-            df = pd.read_sql(query, con=self.conn)
-            jsc.dataframe_to_json(df=df, title="postgres")
+        df = pd.DataFrame()
+        conn = None
 
-        except Exception as e:
-            print(e)
-            df = pd.DataFrame()
+        for login in self.conn.values():
 
-        finally:
-            self._close_connection()
+            try:
+                conn = psycopg2.connect(
+                    dbname=login.dbname,
+                    user=login.user,
+                    password=login.password,
+                    host=login.host,
+                    port=login.port
+                )
+
+                df = pd.read_sql(query, con=conn)
+                jsc.dataframe_to_json(df=df, title="postgres")
+
+            except Exception as e:
+                print(e)
+
+            finally:
+                conn.close()
+
+            if not df.empty:
+                break
 
         return df
-
-    def _close_connection(self) -> None:
-        """Closes the connection."""
-        self.conn.close()

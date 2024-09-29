@@ -7,3 +7,7 @@ TIME_FORMAT = '%Y-%m-%d'
 
 EXPORT_DIR = "export"
 os.makedirs(EXPORT_DIR, exist_ok=True)
+
+FINANCE = "finance"
+RISKMGMT = "risk_mgmt"
+TEAMMAPPING = "team_mapping"

@@ -6,7 +6,7 @@ from datetime import timedelta, datetime
 import neo4j
 from neo4j import GraphDatabase
 
-from credentials import NeoLogin as nl
+from src.api.credentials import NeoLogin as nl
 
 
 def setup():

@@ -1,7 +1,7 @@
 """Module that deals specifically with communication with the risk management database."""
 
 from src.api.DB_Connections.mongo import DataBase as Mongo
-from credentials import RISK_MGMT_LOGIN
+from src.api.credentials import RISK_MGMT_LOGIN
 
 
 class RiskDB:
@@ -15,7 +15,7 @@ class RiskDB:
     def __init__(self):
         """Inits the Database object."""
 
-        self.db = Mongo(login=RISK_MGMT_LOGIN)
+        self.db = Mongo()
 
     def get_mitigation_plan(self, risk_id: str) -> list[dict]:
         """

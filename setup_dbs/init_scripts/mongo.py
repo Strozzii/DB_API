@@ -5,7 +5,7 @@ import os.path
 
 from pymongo import MongoClient
 
-from credentials import MongoLogin as ml
+from src.api.credentials import MongoLogin as ml
 
 
 def setup():

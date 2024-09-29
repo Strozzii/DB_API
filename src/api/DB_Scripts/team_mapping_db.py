@@ -1,7 +1,7 @@
 """Module that deals specifically with communication with the team mapping database."""
 
 from src.api.DB_Connections.neo import DataBase as Neo
-from credentials import TEAM_MAPPING_LOGIN
+from src.api.credentials import TEAM_MAPPING_LOGIN
 
 
 class TeamsDB:
@@ -15,7 +15,7 @@ class TeamsDB:
     def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.db = Neo(login=TEAM_MAPPING_LOGIN)
+        self.db = Neo()
 
     def get_all_project_leader(self) -> list[dict]:
         """

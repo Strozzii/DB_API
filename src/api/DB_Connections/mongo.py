@@ -3,10 +3,11 @@
 import ast
 from typing import Any
 
+import pandas as pd
 from pymongo import MongoClient
 
 from src.api import json_converter as jsc
-from src.api.login_objects import MongoLogin
+from src.api.credentials import MONGO_CREDS as LOGIN
 
 
 class DataBase:
@@ -19,12 +20,10 @@ class DataBase:
         collection: Selection of a specific collection
     """
 
-    def __init__(self, login: MongoLogin) -> None:
+    def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.client = MongoClient(login.host)
-        self.conn = self.client[login.db]
-        self.collection = login.collection
+        self.conn = LOGIN
 
     def get_data(self, atts: list, limit: int) -> list[dict]:
         """
@@ -66,28 +65,32 @@ class DataBase:
         query['_id'] = 0
 
         data = []
+        client = None
 
-        try:
-            coll = self.conn[self.collection]
-            cursor = coll.find(filter_dict, query)
+        for login in self.conn.values():
 
-            if "limit" in kwargs:
-                cursor = cursor.limit(kwargs['limit'])
+            try:
+                client = MongoClient(login.host)
+                conn = client[login.db]
+                coll = conn[login.collection]
 
-            data = list(cursor)
+                cursor = coll.find(filter_dict, query)
 
-            jsc.convert_list_to_json(data, title="mongo")
+                if "limit" in kwargs:
+                    cursor = cursor.limit(kwargs['limit'])
 
-        except Exception as e:
-            print(e)
+                data = list(cursor)
 
-        finally:
-            self._close_client()
+                jsc.convert_list_to_json(data, title="mongo")
+
+            except Exception as e:
+                print(e)
+
+            finally:
+                client.close()
+
+            if data:
+                break
 
         return data
 
-    def _close_client(self) -> None:
-        """Cleans up client resources and disconnect from MongoDB."""
-        self.conn = None
-        self.collection = None
-        self.client.close()

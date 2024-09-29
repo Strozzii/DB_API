@@ -4,7 +4,7 @@ import neo4j
 from neo4j import GraphDatabase
 
 from src.api import json_converter as jsc
-from src.api.login_objects import NeoLogin
+from src.api.credentials import NEO_CREDS as LOGIN
 from src.api.datetime_handler import convert_timestamp
 
 
@@ -17,12 +17,10 @@ class DataBase:
         conn: Connection instance to communicate with a neo4j database
     """
 
-    def __init__(self, login: NeoLogin) -> None:
+    def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.driver = GraphDatabase.driver(uri=login.host,
-                                           auth=(login.username, login.password))
-        self.conn = self.driver.session()
+        self.conn = LOGIN
 
     def get_data(self, elements: str, atts: list, limit: int) -> list[dict]:
         """
@@ -52,45 +50,45 @@ class DataBase:
 
         records = []
 
-        try:
-            # The result is a neo4j object which needs a little bit of transformation
-            result = self.conn.run(query)
+        for login in self.conn.values():
 
-            for record in result:
-                record_dict = {}
+            conn = GraphDatabase.driver(uri=login.host, auth=(login.username, login.password))
+            session = conn.session()
 
-                # FYI: We need to convert timestamps, cause JSON can't natively handle datetime-objects
-                for key, value in record.items():
+            try:
+                # The result is a neo4j object which needs a little bit of transformation
+                result = session.run(query)
 
-                    # The usual case for nodes
-                    if isinstance(value, dict):
-                        record_dict[key] = {k: convert_timestamp(v) for k, v in value.items()}
+                for record in result:
+                    record_dict = {}
 
-                    # The case for relationships, the format is kinda scuffed :(
-                    elif isinstance(value, neo4j.graph.Relationship):
-                        record_dict[key] = {
-                            "type": value.type,
-                            **{k: convert_timestamp(v) for k, v in dict(value).items()}
-                        }
-                    elif isinstance(value, str):
-                        record_dict[key] = value
+                    # FYI: We need to convert timestamps, cause JSON can't natively handle datetime-objects
+                    for key, value in record.items():
 
-                    else:
-                        record_dict[key] = {k: convert_timestamp(v) for k, v in dict(value).items()}
+                        # The usual case for nodes
+                        if isinstance(value, dict):
+                            record_dict[key] = {k: convert_timestamp(v) for k, v in value.items()}
 
-                records.append(record_dict)
+                        # The case for relationships, the format is kinda scuffed :(
+                        elif isinstance(value, neo4j.graph.Relationship):
+                            record_dict[key] = {
+                                "type": value.type,
+                                **{k: convert_timestamp(v) for k, v in dict(value).items()}
+                            }
+                        elif isinstance(value, str):
+                            record_dict[key] = value
 
-            jsc.convert_list_to_json(records, "neo")
+                        else:
+                            record_dict[key] = {k: convert_timestamp(v) for k, v in dict(value).items()}
 
-        except Exception as e:
-            print(e)
+                    records.append(record_dict)
 
-        finally:
-            self._close_driver()
+                jsc.convert_list_to_json(records, "neo")
+
+            except Exception as e:
+                print(e)
+
+            finally:
+                conn.close()
 
         return records
-
-    def _close_driver(self) -> None:
-        """Shuts down, closing any open connections in the pool."""
-        self.conn = None
-        self.driver.close()
