@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import psycopg2
 from psycopg2 import sql
 
-from src.api.credentials import PostgresLogin as pl
+from src.api.credentials import FINANCE_LOGIN as fl
 
 
 def setup(number: int = 100):
@@ -17,11 +17,11 @@ def setup(number: int = 100):
     """
 
     conn = psycopg2.connect(
-        dbname=pl.dbname,
-        user=pl.user,
-        password=pl.password,
-        host=pl.host,
-        port=pl.port
+        dbname=fl.dbname,
+        user=fl.user,
+        password=fl.password,
+        host=fl.host,
+        port=fl.port
     )
     cur = conn.cursor()
 

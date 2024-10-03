@@ -5,15 +5,15 @@ import os.path
 
 from pymongo import MongoClient
 
-from src.api.credentials import MongoLogin as ml
+from src.api.credentials import RISK_MGMT_LOGIN as rml
 
 
 def setup():
     """Clears the existing Mongo database and populates it with test risk data from a json-file."""
 
-    client = MongoClient(ml.host)
-    db = client[ml.db]
-    collection = db[ml.collection]
+    client = MongoClient(rml.host)
+    db = client[rml.db]
+    collection = db[rml.collection]
 
     collection.drop()
 
