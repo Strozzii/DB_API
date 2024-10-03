@@ -50,7 +50,7 @@ class DataBase:
         df = pd.DataFrame()
         conn = None
 
-        for login in self.conn.values():
+        for login in self.cred.values():
 
             try:
                 conn = psycopg2.connect(

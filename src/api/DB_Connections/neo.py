@@ -49,7 +49,7 @@ class DataBase:
 
         records = []
 
-        for login in self.conn.values():
+        for login in self.cred.values():
 
             conn = GraphDatabase.driver(uri=login.host, auth=(login.username, login.password))
             session = conn.session()

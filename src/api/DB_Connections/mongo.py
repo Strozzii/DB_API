@@ -64,7 +64,7 @@ class DataBase:
         data = []
         client = None
 
-        for login in self.conn.values():
+        for login in self.cred.values():
 
             try:
                 client = MongoClient(login.host)

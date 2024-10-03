@@ -22,9 +22,9 @@ class Main:
         """Runs the script to simulate the frontend."""
 
         # Targeted call of a method on a specific database type
-        postgres_finance_target_df = self.data.get_postgres_data(table="ausgaben", atts=["id", "expense_type", "amount", "expense_date"], limit=9)
-        mongodb_risk_target_dict = self.data.get_mongo_data(atts=["title", "category", "reported_by"], limit=4)
-        neo4j_team_target_dict = self.data.get_neo_data(elements="(e : Employee)", atts=['e.name', 'e.id'])
+        # postgres_finance_target_df = self.data.get_postgres_data(table="ausgaben", atts=["id", "expense_type", "amount", "expense_date"], limit=9)
+        # mongodb_risk_target_dict = self.data.get_mongo_data(atts=["title", "category", "reported_by"], limit=4)
+        # neo4j_team_target_dict = self.data.get_neo_data(elements="(e : Employee)", atts=['e.name', 'e.id'])
 
         # self.plot.make_bar_graph(postgres_finance_target_df, "expense_date", "amount", "Kosten der letzten 9 Tage")
 
