@@ -4,7 +4,6 @@ from typing import Any, Union
 
 import pandas as pd
 
-from src.api.login_objects import MongoLogin, NeoLogin
 from src.api.query_analyzer import Syntax, analyze_query
 from src.api.DB_Connections.postgres import DataBase as Postgres
 from src.api.DB_Connections.neo import DataBase as Neo
@@ -54,7 +53,7 @@ class DataManager:
             case _:
                 raise ValueError("Your query is not valid or not supported yet...")
 
-        return self.db.get_data_from_query(query=query, **kwargs)
+        return self.db.get_data(query=query, **kwargs)
 
     def get_postgres_data(self, table: str, atts: list, limit: int = 365) -> pd.DataFrame:
         """
@@ -67,9 +66,9 @@ class DataManager:
         """
 
         self.db = Postgres()
-        return self.db.get_data(table=table,
-                                atts=atts,
-                                limit=limit)
+        return self.db.get_data_from_atts(table=table,
+                                          atts=atts,
+                                          limit=limit)
 
     def get_mongo_data(self, atts: list, limit: int = 100) -> list[dict]:
         """
@@ -81,8 +80,8 @@ class DataManager:
         """
 
         self.db = Mongo()
-        return self.db.get_data(atts=atts,
-                                limit=limit)
+        return self.db.get_data_from_atts(atts=atts,
+                                          limit=limit)
 
     def get_neo_data(self, elements: str, atts: list, limit: int = 100) -> list[dict]:
         """
@@ -94,9 +93,9 @@ class DataManager:
         :return:            List of dictionaries as result and the result as JSON-file
         """
         self.db = Neo()
-        return self.db.get_data(elements=elements,
-                                atts=atts,
-                                limit=limit)
+        return self.db.get_data_from_atts(elements=elements,
+                                          atts=atts,
+                                          limit=limit)
 
     def get_expenses_by_date(self, start: str = "", end: str = "") -> pd.DataFrame:
         """

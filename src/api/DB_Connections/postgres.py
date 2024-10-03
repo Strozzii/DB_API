@@ -12,15 +12,15 @@ class DataBase:
     Represents an object which communicates with a Postgres database.
 
     attributes:
-        conn: Connection instance to communicate with a Postgres database
+        conn:   Collection of all database credentials for Postgres-databases
     """
 
     def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.conn = LOGIN
+        self.cred = LOGIN
 
-    def get_data(self, table: str, atts: list, limit: int) -> pd.DataFrame:
+    def get_data_from_atts(self, table: str, atts: list, limit: int) -> pd.DataFrame:
         """
         Extracts data from the database based on arguments which specifies the query.
 
@@ -37,9 +37,9 @@ class DataBase:
 
         sql = f"SELECT {attrs_str} FROM {table} LIMIT {limit}"
 
-        return self.get_data_from_query(query=sql)
+        return self.get_data(query=sql)
 
-    def get_data_from_query(self, query: str) -> pd.DataFrame:
+    def get_data(self, query: str) -> pd.DataFrame:
         """
         Extracts data from the database based on a query.
 

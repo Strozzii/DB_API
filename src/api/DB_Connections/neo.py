@@ -13,16 +13,15 @@ class DataBase:
     Represents an object which communicates with a neo4j database.
 
     attributes:
-        driver: Active driver
-        conn: Connection instance to communicate with a neo4j database
+        conn:   Collection of all database credentials for Neo4j-databases
     """
 
     def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.conn = LOGIN
+        self.cred = LOGIN
 
-    def get_data(self, elements: str, atts: list, limit: int) -> list[dict]:
+    def get_data_from_atts(self, elements: str, atts: list, limit: int) -> list[dict]:
         """
         Extracts data from the database based on arguments which specifies the Cypher query.
 
@@ -38,9 +37,9 @@ class DataBase:
         attrs_str = ", ".join(atts)
         cypher_query = f"MATCH {elements} RETURN {attrs_str} LIMIT {limit}"
 
-        return self.get_data_from_query(query=cypher_query)
+        return self.get_data(query=cypher_query)
 
-    def get_data_from_query(self, query: str) -> list[dict]:
+    def get_data(self, query: str) -> list[dict]:
         """
         Extracts data from the database based on a query.
 
@@ -66,7 +65,7 @@ class DataBase:
                     for key, value in record.items():
 
                         # The usual case for nodes
-                        if isinstance(value, dict):
+                        if isinstance(value, neo4j.graph.Node):
                             record_dict[key] = {k: convert_timestamp(v) for k, v in value.items()}
 
                         # The case for relationships, the format is kinda scuffed :(

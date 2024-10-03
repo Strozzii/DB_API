@@ -3,7 +3,6 @@
 import ast
 from typing import Any
 
-import pandas as pd
 from pymongo import MongoClient
 
 from src.api import json_converter as jsc
@@ -15,17 +14,15 @@ class DataBase:
     Represents an object which communicates with a MongoDB database.
 
     attributes:
-        client:     MongoClient instance
-        conn:       Connection instance to communicate with a MongoDB database
-        collection: Selection of a specific collection
+        conn:   Collection of all database credentials for MongoDB-databases
     """
 
     def __init__(self) -> None:
         """Inits the Database object."""
 
-        self.conn = LOGIN
+        self.cred = LOGIN
 
-    def get_data(self, atts: list, limit: int) -> list[dict]:
+    def get_data_from_atts(self, atts: list, limit: int) -> list[dict]:
         """
         Extracts data from the database based on arguments which specifies the query.
 
@@ -38,11 +35,11 @@ class DataBase:
         if atts:
             projection = {att: 1 for att in atts}
 
-        data = self.get_data_from_query(query=projection, limit=limit)
+        data = self.get_data(query=projection, limit=limit)
 
         return data
 
-    def get_data_from_query(self, query: str | dict, filter_dict: dict = None, **kwargs: Any) -> list[dict]:
+    def get_data(self, query: str | dict, filter_dict: dict = None, **kwargs: Any) -> list[dict]:
         """
         Extracts data from the database based on a query.
 

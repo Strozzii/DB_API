@@ -26,4 +26,4 @@ class TeamsDB:
 
         query = "MATCH (e:Employee)-[r:VERANTWORTLICH_FUER]-(p:Project) RETURN e, r, p"
 
-        return self.db.get_data_from_query(query=query)
+        return self.db.get_data(query=query)

@@ -42,4 +42,4 @@ class FinanceDB:
         else:
             raise ValueError("You need to provide at least one date as start or end!")
 
-        return self.db.get_data_from_query(query=base_query)
+        return self.db.get_data(query=base_query)

@@ -31,4 +31,4 @@ class RiskDB:
         }
         filter_dict = {"risk_id": risk_id}
 
-        return self.db.get_data_from_query(query=query, filter_dict=filter_dict)
+        return self.db.get_data(query=query, filter_dict=filter_dict)
